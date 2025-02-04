@@ -95,23 +95,18 @@ public class TestMicrosoftTeams {
 	 
 	   @Test(dataProvider = "loginData",priority=1)
 	    public void testLogin(String email, String password, boolean Expected) {
-		   
-		   WebElement getStart = driver.findElement(By.id("com.microsoft.teams:id/get_started_button"));
-		   getStart.click();
-		    WebElement emailField = driver.findElement(By.id("com.microsoft.teams:id/email"));
+		WebElement getStart = driver.findElement(By.id("com.microsoft.teams:id/get_started_button"));
+		getStart.click();
+		WebElement emailField = driver.findElement(By.id("com.microsoft.teams:id/email"));
 	        emailField.clear();
 	        emailField.sendKeys(email);
-
 	        WebElement nextButton = driver.findElement(By.id("com.microsoft.teams:id/next"));
 	        nextButton.click();
-
 	        WebElement passwordField = driver.findElement(By.id("com.microsoft.teams:id/password"));
 	        passwordField.clear();
 	        passwordField.sendKeys(password);
-
 	        WebElement signInButton = driver.findElement(By.id("com.microsoft.teams:id/signIn"));
 	        signInButton.click();
-
 	        if (Expected) {
 	            WebElement homeScreen = driver.findElement(By.id("com.microsoft.teams:id/home"));
 	            Assert.assertTrue(homeScreen != null, "Login failed");
