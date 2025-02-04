@@ -1,27 +1,19 @@
-package Hello.AndroTest;
-
-import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.Test;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-
+package Microsoft.TeamsApp;
 import java.net.MalformedURLException;
-import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.android.nativekey.AndroidKey;
-import io.appium.java_client.android.nativekey.KeyEvent;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
-
-import javax.lang.model.element.Element;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.HttpCommandExecutor;
+import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.service.local.AppiumDriverLocalService;
 
 public class TestMicrosoftTeams {
 
@@ -31,21 +23,35 @@ public class TestMicrosoftTeams {
 	public void setUp() throws MalformedURLException {
 
 		DesiredCapabilities caps = new DesiredCapabilities();
-		caps.setCapability("appium:platformName", "Android");
-		caps.setCapability("appium:deviceName", "Medium Phone API 35");
-		caps.setCapability("appium:platformVersion", "15");
-		caps.setCapability("appium:app", "C:\\Users\\ms2\\eclipse-workspace\\AxsosAcademy\\microsoftTeams.apk");
+	
+		caps.setCapability("platformName", "Android");
+		caps.setCapability("appium:deviceName", "507859337d76");
+		caps.setCapability("appium:u`did", "507859337d76");
+		caps.setCapability("appium:appPackage", "com.microsoft.teams");
+	    caps.setCapability("appium:appActivity", "com.microsoft.skype.teams.views.activities.SplashActivity");
 	    caps.setCapability("appium:automationName", "UiAutomator2");
+	    caps.setCapability("appium:ensureWebviewsHavePages", true);
+	    caps.setCapability("appium:nativeWebScreenshot", true);
+	    caps.setCapability("appium:newCommandTimeout", 30);
+	    caps.setCapability("appium:connectHardwareKeyboard", true);
+	    
+	    driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), caps);
+	    HttpCommandExecutor executor = new HttpCommandExecutor(new URL("http://127.0.0.1:4723/wd/hub"));
+	    driver = new AndroidDriver(executor, caps);
 	
 
-		driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), caps);
-        driver.manage().timeouts().implicitlyWait(5000, TimeUnit.SECONDS);
+
+		
+		 System.out.println("Succ.");
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
 	}
+	
 
 
     @Test(dataProvider = "signupData")
     public void testSignup(String email, String password, String confirmPassword, boolean Expected) {
+    	
         WebElement signupButton = driver.findElement(By.id("com.microsoft.teams:id/signup"));
         signupButton.click();
 
@@ -87,8 +93,11 @@ public class TestMicrosoftTeams {
         };
     }
 	 
-	   @Test(dataProvider = "loginData")
+	   @Test(dataProvider = "loginData",priority=1)
 	    public void testLogin(String email, String password, boolean Expected) {
+		   
+		   WebElement getStart = driver.findElement(By.id("com.microsoft.teams:id/get_started_button"));
+		   getStart.click();
 		    WebElement emailField = driver.findElement(By.id("com.microsoft.teams:id/email"));
 	        emailField.clear();
 	        emailField.sendKeys(email);
@@ -114,7 +123,7 @@ public class TestMicrosoftTeams {
 		 @DataProvider(name = "loginData")
 		    public Object[][] getLoginData() {
 		        return new Object[][] {
-		            {"afnan.kharoof@axsos.academy.com", "Ghaith1234", true}, 
+		            {"afnan.kharoof@axsos.academy.com", "Ghaith1234", true},
 		            {"invalid#user@test.com", "hskl@@", false}, 
 		            {"", "Test@1234", false}, 
 		            {"testuser@example.com", "", false} 
